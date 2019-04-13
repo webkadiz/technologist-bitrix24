@@ -1,0 +1,2 @@
+ ( 19:52:19 ) {"result":true,"time":{"start":1553705541.1508,"finish":1553705541.2096,"duration":0.058759927749634,"processing":0.010748147964478,"date_start":"2019-03-27T19:52:21+03:00","date_finish":"2019-03-27T19:52:21+03:00"}}
+ ( 19:52:22 ) {"error":"ERROR_CORE","error_description":"Unable to set placement handler: Handler already binded"}
