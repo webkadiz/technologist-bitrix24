@@ -53,6 +53,12 @@ class Project
 
 			foreach ($assemblyDB as $key => $field) {
 				if ($key !== 'assembly_id' && $key !== 'project_id' && $key !== 'name' && $key !== 'category' && $key !== 'detail_name') {
+					if (strpos($key, 'all') !== false) {
+						$keySingle = strstr($key, '_all', true);
+						$keySingleValue = $assemblyDB['amount'] * $detail[$keySingle];
+						DB::query("UPDATE assembly SET $key = '$keySingleValue' WHERE assembly_id = {$assemblyDB['assembly_id']} AND project_id = {$this->getProjectID()}");
+						continue;
+					}
 					DB::query("UPDATE assembly SET $key = '{$detail[$key]}' WHERE assembly_id = {$assemblyDB['assembly_id']} AND project_id = {$this->getProjectID()}");
 				}
 			}
@@ -76,6 +82,12 @@ class Project
 		foreach ($detailHoles as $index => $detailHole) {
 			foreach ($detailHole as $key => $field) {
 				if ($key !== 'hole_id' && $key !== 'detail_id') {
+					if (strpos($key, 'all') !== false) {
+						$keySingle = strstr($key, '_all', true);
+						$keySingleValue = $detailDB['amount'] * $detail[$keySingle . ($index + 1)];
+						DB::query("UPDATE hole SET $key = '$keySingleValue' WHERE hole_id = {$detailHole['hole_id']}");
+						continue;
+					}
 					DB::query("UPDATE hole SET $key = '{$detail[$key . ($index + 1)]}' WHERE hole_id = {$detailHole['hole_id']}");
 				}
 			}
@@ -84,6 +96,12 @@ class Project
 		foreach ($assemblySeams as $index => $assemblySeam) {
 			foreach ($assemblySeam as $key => $field) {
 				if ($key !== 'assembly_id' && $key !== 'seam_id') {
+					if (strpos($key, 'all') !== false) {
+						$keySingle = strstr($key, '_all', true);
+						$keySingleValue = $assemblyDB['amount'] * $detail[$keySingle . ($index + 1)];
+						DB::query("UPDATE seam SET $key = '$keySingleValue' WHERE seam_id = {$assemblySeam['seam_id']}");
+						continue;
+					}
 					DB::query("UPDATE seam SET $key = '{$detail[$key . ($index + 1)]}' WHERE seam_id = {$assemblySeam['seam_id']}");
 				}
 			}
@@ -91,12 +109,24 @@ class Project
 
 		foreach ($assemblyDB as $key => $field) {
 			if ($key !== 'assembly_id' && $key !== 'project_id' && $key !== 'name' && $key !== 'category' && $key !== 'detail_name') {
+				if (strpos($key, 'all') !== false) {
+					$keySingle = strstr($key, '_all', true);
+					$keySingleValue = $assemblyDB['amount'] * $detail[$keySingle];
+					DB::query("UPDATE assembly SET $key = '$keySingleValue' WHERE assembly_id = {$assemblyDB['assembly_id']} AND project_id = {$this->getProjectID()}");
+					continue;
+				}
 				DB::query("UPDATE assembly SET $key = '{$detail[$key]}' WHERE assembly_id = {$assemblyDB['assembly_id']} AND project_id = {$this->getProjectID()}");
 			}
 		}
 
 		foreach ($detailDB as $key => $field) {
 			if ($key !== 'detail_id' && $key !== 'project_id' && $key !== 'category' && $key !== 'name') {
+				if (strpos($key, 'all') !== false) {
+					$keySingle = strstr($key, '_all', true);
+					$keySingleValue = $detailDB['amount'] * $detail[$keySingle];
+					DB::query("UPDATE detail SET $key = '$keySingleValue' WHERE detail_id = {$detailDB['detail_id']} AND project_id = {$this->getProjectID()}");
+					continue;
+				}
 				DB::query("UPDATE detail SET $key = '{$detail[$key]}' WHERE detail_id = {$detailDB['detail_id']} AND project_id = {$this->getProjectID()}");
 			}
 		}
@@ -168,9 +198,9 @@ class Project
 			$hardware['name'] = 'метизы';
 			$hardware['category'] = 'метизы';
 			$hardware['children'] = $hardwareList;
+			$library[] = $hardware;
 		}
 
-		$library[] = $hardware;
 
 		return $library;
 	}
@@ -278,10 +308,13 @@ class Project
 			}
 
 			$materialWeight = round($materialWeight, 2);
-			$materialRefusal = round($materialWeight + $materialWeight * $materialRefusal, 2);
+			$materialWeightRefusal = round($materialWeight + $materialWeight * $materialRefusal, 2);
+			if ($materialRefusal === false) {
+				$materialWeightRefusal = 0;
+			}
 
 			$materials[$counter][] = $materialWeight;
-			$materials[$counter][] = $materialRefusal;
+			$materials[$counter][] = $materialWeightRefusal;
 
 			$counter++;
 		}
@@ -314,7 +347,10 @@ class Project
 				'welding' => ['seam', 'G37'],
 				'assembly' => ['amount', 'G43']
 			],
-			'уголок' => [],
+			'уголок' => [
+				'drilling' => ['holeCircle', 'G23', 'holeOval', 'G6'],
+				'painting' => ['square', 'G25', 'square', 'G26']
+			],
 			'двутавр' => [
 				'cutting' => ['length', 'G22'],
 				'drilling' => ['holeCircle', 'G17', 'holeOval', 'G6'],
@@ -324,7 +360,19 @@ class Project
 				'cutting' => ['length', 'G22'],
 				'drilling' => ['holeCircle', 'G16', 'holeOval', 'G6'],
 				'painting' => ['square', 'G24', 'square', 'G26']
-			]
+			],
+			'труба кв.' => [
+				'drilling' => ['holeCircle', 'G50', 'holeOval', 'G6'],
+				'painting' => ['square', 'G52', 'square', 'G53']
+			],
+			'профиль(кв.)' => [
+				'drilling' => ['holeCircle', 'G56', 'holeOval', 'G6'],
+				'painting' => ['square', 'G58', 'square', 'G59']
+			],
+			'профиль(пр.)' => [
+				'drilling' => ['holeCircle', 'G62', 'holeOval', 'G6'],
+				'painting' => ['square', 'G64', 'square', 'G65']
+			],
 		];
 
 		$operationList = ['rolling', 'cutting', 'drilling', 'welding', 'assembly', 'painting'];
@@ -371,6 +419,13 @@ class Project
 			}
 
 			$laborCosts[$materialKey]['laborTotal'] = round($laborTotal, 2);
+
+			if (count($laborCosts[$materialKey]) === count(array_filter($laborCosts[$materialKey], function ($item, $key) {
+				if ($key === 'type') return true;
+				return (int)$item === 0;
+			}, ARRAY_FILTER_USE_BOTH))) {
+				unset($laborCosts[$materialKey]);
+			}
 		}
 
 
@@ -581,11 +636,11 @@ class Project
 					if ($ext === 'pdf') {
 						$filepath = $this->getProjectPath() . $pdf . '.' . $ext;
 					} elseif ($ext === 'xlsx') {
-						if (strpos($filename, 'detail')) {
+						if (strpos($filename, 'detail') !== false) {
 							$filepath = $this->getProjectPath() . 'detail.xlsx';
-						} elseif (strpos($filename, 'assembly')) {
+						} elseif (strpos($filename, 'assembly') !== false) {
 							$filepath = $this->getProjectPath() . 'assembly.xlsx';
-						} elseif (strpos($filename, 'fixing')) {
+						} elseif (strpos($filename, 'fixing') !== false) {
 							$filepath = $this->getProjectPath() . 'fixing.xlsx';
 						}
 
@@ -853,7 +908,7 @@ class Project
 			$economistRowFinal = $this->modifyRow($economistRow, 'economist');
 
 			if ($this->checkRowEconomist($economistRowFinal, $economistIndex)) {
-				if ($economistRowFinal['stuff'] === $stuff) return $economistRowFinal['refusal'];
+				if (strpos($stuff, $economistRowFinal['stuff']) !== false) return $economistRowFinal['refusal'];
 			}
 		}
 	}
@@ -862,7 +917,7 @@ class Project
 	{
 		if (($percent = strstr($refusal, '%', true)) !== false) {
 			if ((int)$percent !== 0) return round($percent / 100, 2);
-			else return 1;
-		} else return 1;
+			else return false;
+		} else return false;
 	}
 }
