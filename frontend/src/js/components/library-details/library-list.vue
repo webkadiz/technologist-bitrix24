@@ -25,6 +25,7 @@ export default {
       } else if (category === "все") {
         details = details;
       } else if (category === "ошибки") {
+        details.forEach(detail => console.log(detail));
         details = details.filter(detail => this.isErrorTree(detail.id));
       } else if (category) {
         details = details.filter(detail => detail.category === category);
