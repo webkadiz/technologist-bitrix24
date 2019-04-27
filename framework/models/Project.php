@@ -574,10 +574,7 @@ class Project
 			exit;
 		};
 
-		if ($this->archive['type'] !== 'application/x-zip-compressed' && $this->archive['type'] !== "application/octet-stream") {
-			d('неверный тип файла');
-			exit;
-		}
+		
 
 		if ($this->archive['size'] > 1024 * 1024 * 30) {
 			d('файл слишком большого размера');

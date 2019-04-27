@@ -199,9 +199,9 @@ Config::set('css', [
 Config::set('db', [
   'dbserver' => 'mysql',
   'host' => 'localhost',
-  'dbname' => 'bitrix24',
-  'user' => 'root',
-  'password' => '',
+  'dbname' => 'host1745294_bitrix24',
+  'user' => 'host1745294_bitrix24',
+  'password' => 'unC0J8I0',
   'charset' => 'utf8',
 ]);
 
