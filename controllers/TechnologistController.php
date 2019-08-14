@@ -76,17 +76,17 @@ class TechnologistController extends Controller
 
 			Response::sendJSON(['result' => 'данные успешно сохранены']);
 		} elseif ($action === 'load-economist' && $compute === null) {
-			$economist = Request::getFile('economist');
+			$economist = $_FILES['economist'];
 
 			$project = new Project();
 			$project->loadEconomist($economist);
 
-			Response::sendJSON(['result' => 'нормы экономиста успешно загружены']);
+			$this->sendJSON(['result' => 'нормы экономиста успешно загружены']);
 		} elseif ($action === 'compute' && $compute === 'materials') {
 			$project = new Project();
 			$materials = $project->getMaterials();
 
-			Response::sendJSON([
+			$this->sendJSON([
 				'data' => $materials,
 				'result' => 'материалы успешно загружены'
 			]);
@@ -94,7 +94,7 @@ class TechnologistController extends Controller
 			$project = new Project();
 			$laborCosts = $project->getLaborCosts();
 
-			Response::sendJSON([
+			$this->sendJSON([
 				'data' => $laborCosts,
 				'result' => 'трудозатраты успешно загружены'
 			]);

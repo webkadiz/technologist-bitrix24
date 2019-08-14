@@ -1,43 +1,59 @@
 <template>
-  <Snackbar v-if="errors.length" :isSnackbarOpen="errors[0].isServed" :labelText="errors[0].message" @closed="closed"/>
-
+  <Snackbar
+    v-if="currentError"
+    v-bind="optionsForSnackbar "
+    :labelText="currentError.message"
+    :snackID="currentError.id"
+    @closed="closed"
+  />
 </template>
 
 <script>
-import Snackbar from './snackbar'
+import { mapMutations } from 'vuex'
+import Snackbar from "./snackbar";
 
 export default {
   components: { Snackbar },
   watch: {
-    '$store.state.errors': function() {
-      this.$nextTick(() => {
-        
-        console.log('errors change')
-        let nonServedErrors = this.$store.state.errors.filter(error => !error.isServed)
-        let difference = _.differenceBy(nonServedErrors, this.errors)
-        console.log(nonServedErrors)
-        console.log(difference)
-        this.errors = this.errors.concat(difference)
-  
-        console.log(this.errors)   
-        })
+    storeErrors() {
+      let nonServedErrors = this.storeErrors.filter(
+        error => error.isNonServed
+      );
+
+      let difference = _.differenceBy(nonServedErrors, this.localErrors);
+      
+      //console.log(nonServedErrors, 'non served');
+      //console.log(difference, 'difference');
+      this.localErrors = this.localErrors.concat(difference);
     }
   },
   methods: {
     closed(reason) {
-      console.log(this.errors)
-      this.errors.shift()
-      //this.$forceUpdate()
+      let error = this.localErrors.shift()
+      this.makeErrorIsServed(error.id)
+      console.log(this.localErrors)
+    },
+    ...mapMutations(['makeErrorIsServed'])
+  },
+  computed: {
+    storeErrors() {
+      return this.$store.state.errors
+    },
+    currentError() {
+      return this.localErrors[0]
     }
   },
   data() {
     return {
-      errors: []
-    }
+      localErrors: [],
+      optionsForSnackbar: {
+        actionButtonText: 'OK',
+        timeoutMs: 4000
+      }
+    };
   }
-}
+};
 </script>
 
 <style>
-
 </style>

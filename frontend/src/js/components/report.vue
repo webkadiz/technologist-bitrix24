@@ -76,13 +76,22 @@
 import ControlPanel from "./control-panel";
 import FieldInput from "./library-details/field-input";
 import ButtonCommon from "./button-cummon";
+import axios from 'axios'
+import { JsonError, ServerError } from '../errors'
 
 export default {
   components: { FieldInput, ControlPanel, ButtonCommon },
   mounted() {
     bus.$on("openReport", this.openReport);
+    bus.$on('removeProject', this.cleanData)
   },
   methods: {
+    cleanData() {
+      this.materialList = []
+      this.laborCosts = []
+      this.laborHours = 0
+      this.laborDays = 0
+    },
     printTable(table) {
       let prtContent = document.querySelector(`.${table}`);
       //prettier-ignore
@@ -94,17 +103,30 @@ export default {
       WinPrint.document.close();
     },
     getMaterialList() {
-      fetchADV("/technologist/project/compute/materials", {}, data => {
-        this.materialList = data;
-      });
+      axios("/technologist/project/compute/materials")
+        .then(({ data: reponseData }) => {
+          console.log(reponseData);
+          if(typeof reponseData === 'string') throw new JsonError(this.$store, 'не удалось получить материалы от сервера')
+          this.materialList = reponseData.data
+        })
+        .catch(err => {
+          if(err instanceof JsonError) return
+          new ServerError(context);
+        })
     },
 
     getLaborCosts() {
-      fetchADV("/technologist/project/compute/labor-costs", {}, data => {
-        this.laborHours = data.laborHours;
-        this.laborDays = data.laborDays;
-        this.laborCosts = data.laborCosts;
-      });
+      axios("/technologist/project/compute/labor-costs")
+        .then(({ data: reponseData }) => {
+          if(typeof reponseData === 'string') throw new JsonError(this.$store, 'не удалось получить трудозатраты от сервера')
+          this.laborHours = reponseData.data.laborHours;
+          this.laborDays = reponseData.data.laborDays;
+          this.laborCosts = reponseData.data.laborCosts;
+        })
+        .catch(err => {
+          if(err instanceof JsonError) return
+          new ServerError(context);
+        })
     },
     async openReport() {
       await this.getLaborCosts();
@@ -135,7 +157,7 @@ export default {
   width: 100%;
   height: 100%;
   background: white;
-  z-index: 100;
+  z-index: 6;
 
   &__header {
     padding-bottom: 1rem;

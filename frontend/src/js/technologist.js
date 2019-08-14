@@ -8,9 +8,8 @@ import Report from "./components/report";
 import Errors from "./components/errors"
 import Format from "./format";
 import axios from 'axios'
-import {JsonError} from './errors'
+import { JsonError, ServerError } from './errors'
 
-window.JsonError = JsonError
 
 function resizeWindow() {
   BX24.resizeWindow(BX24.getScrollSize().scrollWidth, BX24.getScrollSize().scrollHeight);
@@ -28,6 +27,10 @@ let store = new Vuex.Store({
     detailList: []
   },
   mutations: {
+    makeErrorIsServed(state, errorID) {
+      let error = _.find(state.errors, ['id', errorID])
+      error.isNonServed = false
+    },
     initFormat(state) {
       state.format = new Format(state);
     },
@@ -93,19 +96,15 @@ let store = new Vuex.Store({
   actions: {
     createProject() {},
     getProject(context) {
-      fetchADV("/technologist/project/get", {}, data => {
-        context.state.detailList = data;
-      });
-      // console.log("get project");
-      // fetch("/technologist/project/get")
-      //   .then(res => res.json())
-      //   .then(data => {
-      //     console.log(data);
-      //     context.state.detailList = data;
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
+      axios("/technologist/project/get")
+        .then(({ data }) => {
+          if(typeof data === 'string') throw new JsonError(context)
+          context.state.detailList = data
+        })
+        .catch(err => {
+          if(err instanceof JsonError) return
+          new ServerError(context);
+        })
     },
     getFields(context) {
       axios("/technologist/api/fields")
@@ -132,14 +131,13 @@ new Vue({
     Errors
   },
   async created() {
-    new JsonError('error created', this)
     this.initFormat();
     await this.getFields();
     this.getProject();
 
   },
   mounted() {
-    new JsonError('error mounted', this)
+    new JsonError(this.$store, 'error mounted')
   },
   methods: {
     ...Vuex.mapMutations(["initFormat"]),

@@ -92,7 +92,7 @@ window.toastError = (message, cause) => {
     activationPercent: 0.3
   });
 
-  console.log(cause);
+  //console.log(cause);
 };
 
 window.fetchADV = (source, meta = {}, callback = () => {}) => {

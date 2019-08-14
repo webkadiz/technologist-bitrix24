@@ -1,9 +1,9 @@
 class BaseError extends Error {
-  constructor(message, vm) {
+  constructor(store, message) {
     super(message)
-    this.vm = vm
+    this.store = store
     this.name = this.constructor.name
-    this.errors = this.vm ? this.vm.$store.state.errors : []
+    this.errors = this.store ? this.store.state.errors : []
     
     let id = _.last(this.errors) && _.last(this.errors).id + 1 || 1
 
@@ -11,12 +11,21 @@ class BaseError extends Error {
       id,
       message,
       type: this.name,
-      isServed: false
+      isNonServed: true
     })
   }
 }
 
 class JsonError extends BaseError {
+  constructor(store, message = 'Сервер вернул данные в неправильном формате') {
+    super(store, message)
+  }
 }
 
-export {JsonError}
+class ServerError extends BaseError {
+  constructor(store, message = 'Сервер недоступен') {
+    super(store, message)
+  }
+}
+
+export { JsonError, ServerError }

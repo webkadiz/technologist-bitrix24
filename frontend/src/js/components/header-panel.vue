@@ -22,6 +22,8 @@
 
 <script>
 import ButtonCommon from "./button-cummon";
+import axios from 'axios'
+import { JsonError, ServerError } from '../errors'
 //v-if="!$store.state.detailList.length"
 
 export default {
@@ -47,7 +49,7 @@ export default {
             method: "POST",
             body: formData
           })
-            .then(res => res.text())
+            .then(res => res.json())
             .then(data => {
               console.log(data);
             });
@@ -70,16 +72,26 @@ export default {
 
           form.append("project", file);
 
-          fetchADV(
-            "/technologist/project/create",
-            {
-              method: "POST",
-              body: form
-            },
-            data => {
-              this.getProject();
-            }
-          );
+          axios.post("/technologist/project/create", form)
+            .then(({ data: reponseData }) => {
+              console.log(reponseData);
+              if(typeof reponseData === 'string') throw new JsonError(this.$store, 'не удалось загрузить проект')
+              this.getProject()
+            })
+            .catch(err => {
+              if(err instanceof JsonError) return
+              new ServerError(context);
+            })
+          // fetchADV(
+          //   "/technologist/project/create",
+          //   {
+          //     method: "POST",
+          //     body: form
+          //   },
+          //   data => {
+          //     this.getProject();
+          //   }
+          // );
         } else {
           toastError(
             "загружаемый файл превышает допустимый размер в 30 мегабайт, загрузите файл размером меньше 30 мегабайт",
@@ -94,6 +106,7 @@ export default {
       }
     },
     removeProject() {
+      bus.$emit('removeProject')
       fetchADV("/technologist/project/remove", {}, data => {
         this.getProject();
       });

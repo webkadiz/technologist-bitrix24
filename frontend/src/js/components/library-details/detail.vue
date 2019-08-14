@@ -124,7 +124,7 @@ export default {
 }
 
 .detail_open {
-  z-index: 20;
+  z-index: 5;
   position: fixed;
   margin: 0;
 }

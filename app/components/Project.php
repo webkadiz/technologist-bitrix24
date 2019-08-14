@@ -709,7 +709,6 @@ class Project
 			$rowFinal = $this->modifyRow($row, $table);
 
 			if ($this->checkRow($rowFinal, $table) === 'detail' || $this->checkRow($rowFinal, $table) === 'hardware') {
-				Util::dump('check true');
 				
 				if (key_exists('detail_name', $rowFinal)) {
 					if ($rowFinal['name'] !== null) {
@@ -762,7 +761,6 @@ class Project
 
 
 				$queryStr .= "project_id={$this->getProjectID()}";
-				Util::dump($queryStr);
 				DB::query("INSERT INTO $table SET $queryStr");
 
 
@@ -798,8 +796,6 @@ class Project
 		$tableIndexToTableName = require PL_BASE_DIR . '/data/tableIndex-to-tableName.php';
 
 		$excelAlias = $tableIndexToTableName[$table];
-
-		Util::dump($excelAlias, $table);
 
 		$resultRow = [];
 
@@ -885,7 +881,7 @@ class Project
 
 	function loadEconomist($economistFile)
 	{
-		$economistFileExt = ext($economistFile['name']);
+		$economistFileExt = Util::ext($economistFile['name']);
 		$this->economistName = 'economist.' . $economistFileExt;
 
 		if (move_uploaded_file($economistFile['tmp_name'], $this->getEconomistPath())) {
