@@ -18,7 +18,7 @@
   </div>
 
   <script src="//api.bitrix24.com/api/v1/"></script>
-  <script src="//localhost:8080/js/technologist.js"></script>
+  <script src="/assets/js/technologist.js"></script>
 </body>
 
 </html>
