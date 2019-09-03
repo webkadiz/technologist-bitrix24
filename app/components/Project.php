@@ -8,7 +8,7 @@ use PDO;
 
 class Project
 {
-	private $projectsDir = PL_BASE_DIR . '/projects/';
+	private $projectsDir = PL_BASE_DIR . '/web/projects/';
 	private $projectID;
 	private $archive;
 	private $archiveName;
@@ -576,17 +576,13 @@ class Project
 
 	private function checkArchive()
 	{
-		if (!preg_match('~\.zip|\.rar$~', $this->archive['name'])) {
-			d('неверное расширение у файла');
-			exit;
-		};
+		if (!preg_match('~\.zip|\.rar$~', $this->archive['name']))
+			throw new \Exception('неверное расширение у файла');
 
 		
 
-		if ($this->archive['size'] > 1024 * 1024 * 30) {
-			d('файл слишком большого размера');
-			exit;
-		}
+		if ($this->archive['size'] > 1024 * 1024 * 30)
+			throw new \Exception('файл слишком большого размера');
 
 		return '';
 	}
@@ -601,23 +597,21 @@ class Project
 
 		DB::query("INSERT INTO project(project_id, project_name) VALUES({$this->getProjectID()}, '$projectName')");
 
-		if(!is_dir($this->projectsDir)) {
+		if(!is_dir($this->projectsDir))
 			mkdir($this->projectsDir);
-		}
+		
 
-		if (is_dir($this->getProjectPath())) {
-			d('директория с проектом уже существует');
-			exit;
-		}
+		if (is_dir($this->getProjectPath()))
+			throw new \Exception('директория с проектом уже существует');
+		
 
 		mkdir($this->getProjectPath());
 
-		if (move_uploaded_file($this->archive['tmp_name'], $this->getArchivePath())) {
+		if (move_uploaded_file($this->archive['tmp_name'], $this->getArchivePath()))
 			return '';
-		} else {
-			d('не удалось загрузить архив');
-			exit;
-		}
+		else
+			throw new \Exception('не удалось загрузить архив');
+		
 	}
 
 	private function parseArchive()
@@ -632,7 +626,7 @@ class Project
 			while ($zipEntry = zip_read($zip)) {
 				$ext = Util::ext(zip_entry_name($zipEntry)); // расширение файла
 				$filename = Util::filename(zip_entry_name($zipEntry)); // имя файла без расширения
-				$pdf = substr($filename, 0, 4); // числовой идентификатор pdf файла
+				$pdf = substr($filename, 0, 3); // числовой идентификатор pdf файла
 				$filesize = zip_entry_filesize($zipEntry); // размер файла в байтах
 				$filepath = null;
 
@@ -664,7 +658,7 @@ class Project
 
 			zip_close($zip);
 		} else {
-			d("не получилось открыть архив проекта");
+			throw new \Exception("не получилось открыть архив проекта");
 		}
 	}
 
@@ -895,8 +889,7 @@ class Project
 				if ($this->checkRowEconomist($economistRowFinal, $economistIndex)) { }
 			}
 		} else {
-			d('не удалось загрузить экономист');
-			exit;
+			throw new \Exception('не удалось загрузить экономист');
 		}
 	}
 

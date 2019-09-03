@@ -6,8 +6,5 @@
 /composer.lock
 
 /config/main-local.php
-/web/assets
-/web/index.php
-/web/robots.txt
+/web/
 /log/
-/projects/

@@ -77,7 +77,7 @@ import ControlPanel from "./control-panel";
 import FieldInput from "./library-details/field-input";
 import ButtonCommon from "./button-cummon";
 import axios from 'axios'
-import { JsonError, ServerError } from '../errors'
+import { LogicError, JsonError, ServerError } from '../errors'
 
 export default {
   components: { FieldInput, ControlPanel, ButtonCommon },
@@ -103,29 +103,34 @@ export default {
       WinPrint.document.close();
     },
     getMaterialList() {
-      axios("/technologist/project/compute/materials")
-        .then(({ data: reponseData }) => {
-          console.log(reponseData);
-          if(typeof reponseData === 'string') throw new JsonError(this.$store, 'не удалось получить материалы от сервера')
-          this.materialList = reponseData.data
+      return axios("/technologist/project/compute/materials")
+        .then(({data}) => {
+          if(typeof data === 'string') throw new JsonError(this.$store, 'не удалось получить материалы от сервера')
+          if(data.error) throw new LogicError(this.$store, data.error.message)
+
+          this.materialList = data.data
         })
         .catch(err => {
-          if(err instanceof JsonError) return
-          new ServerError(context);
+          console.log(err)
+          if(err instanceof JsonError || err instanceof LogicError) return
+          new ServerError(this.$store);
         })
     },
 
     getLaborCosts() {
-      axios("/technologist/project/compute/labor-costs")
+      return axios("/technologist/project/compute/labor-costs")
         .then(({ data: reponseData }) => {
+          console.log(reponseData)
           if(typeof reponseData === 'string') throw new JsonError(this.$store, 'не удалось получить трудозатраты от сервера')
+          if(reponseData.error) throw new LogicError(this.$store, reponseData.error.message)
           this.laborHours = reponseData.data.laborHours;
           this.laborDays = reponseData.data.laborDays;
           this.laborCosts = reponseData.data.laborCosts;
         })
         .catch(err => {
-          if(err instanceof JsonError) return
-          new ServerError(context);
+          console.log(err)
+          if(err instanceof JsonError || err instanceof LogicError) return
+          new ServerError(this.$store);
         })
     },
     async openReport() {

@@ -96,7 +96,7 @@ let store = new Vuex.Store({
   actions: {
     createProject() {},
     getProject(context) {
-      axios("/technologist/project/get")
+      return axios("/technologist/project/get")
         .then(({ data }) => {
           if(typeof data === 'string') throw new JsonError(context)
           context.state.detailList = data
@@ -107,7 +107,7 @@ let store = new Vuex.Store({
         })
     },
     getFields(context) {
-      axios("/technologist/api/fields")
+      return axios("/technologist/api/fields")
         .then(({data}) => {
           //if (typeof data === 'string') throw { error: 'is not json'}
           context.state.fields = data;
@@ -133,11 +133,12 @@ new Vue({
   async created() {
     this.initFormat();
     await this.getFields();
-    this.getProject();
+    await this.getProject();
+    console.log(this.$store.state.detailList)
 
   },
   mounted() {
-    new JsonError(this.$store, 'error mounted')
+    //new JsonError(this.$store, 'error mounted')
   },
   methods: {
     ...Vuex.mapMutations(["initFormat"]),

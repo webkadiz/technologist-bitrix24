@@ -22,10 +22,16 @@ class JsonError extends BaseError {
   }
 }
 
+class LogicError extends BaseError {
+  constructor(store, message = 'Произошла ошибка приложения') {
+    super(store, message)
+  }
+}
+
 class ServerError extends BaseError {
   constructor(store, message = 'Сервер недоступен') {
     super(store, message)
   }
 }
 
-export { JsonError, ServerError }
+export { LogicError, JsonError, ServerError }

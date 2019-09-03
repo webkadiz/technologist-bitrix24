@@ -51,7 +51,7 @@ export default {
       if (this.openedDetail) return;
 
       this.openedDetail = true;
-
+ 
       el = this.$el;
 
       this.left = left = el.getBoundingClientRect().left; // запоминаем расстояние от левого края родительского элемнта, до абсолютного позиционирования
