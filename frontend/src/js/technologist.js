@@ -1,5 +1,7 @@
 import "./config";
 
+import vuetify from './vuetify'
+import '@sass/style.scss'
 
 import HeaderPanel from "./components/header-panel";
 import Library from "./components/library-details/library";
@@ -8,8 +10,10 @@ import Report from "./components/report";
 import Errors from "./components/errors"
 import Format from "./format";
 import axios from 'axios'
-import { JsonError, ServerError } from './errors'
+import { JsonError, ServerError, BaseError } from './errors'
 
+if (DEVELOPMENT)
+  axios.defaults.baseURL = 'http://technologist-php-lite'
 
 function resizeWindow() {
   BX24.resizeWindow(BX24.getScrollSize().scrollWidth, BX24.getScrollSize().scrollHeight);
@@ -102,7 +106,8 @@ let store = new Vuex.Store({
           context.state.detailList = data
         })
         .catch(err => {
-          if(err instanceof JsonError) return
+          console.dir(err)
+          if(err instanceof BaseError) return
           new ServerError(context);
         })
     },
@@ -123,6 +128,7 @@ let store = new Vuex.Store({
 new Vue({
   el: "#app",
   store,
+  vuetify,
   components: {
     Library,
     Overlay,

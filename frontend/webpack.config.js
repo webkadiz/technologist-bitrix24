@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
-const NODE_ENV = process.env.NODE_ENV || "development";
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = env => ({
   entry: { technologist: "./src/js/technologist.js", print: "./src/js/print.js" },
@@ -16,18 +16,7 @@ module.exports = env => ({
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env"],
-            plugins: [
-              "@babel/plugin-proposal-object-rest-spread",
-              "@babel/plugin-syntax-dynamic-import",
-              "@babel/plugin-proposal-class-properties",
-              "@babel/plugin-transform-async-to-generator"
-            ]
-          }
-        }
+        use: "babel-loader"
       },
       {
         test: /\.vue$/,
@@ -38,6 +27,8 @@ module.exports = env => ({
         use: ["vue-style-loader", "css-loader", {
           loader: "sass-loader",
           options: {
+            implementation: require('sass'),
+            fiber: require('fibers'),
             includePaths: ['./node_modules']
           }
         }]
@@ -56,14 +47,20 @@ module.exports = env => ({
     }
   },
   devServer: {
-    overlay: true
+    overlay: true,
+    port: 4000
   },
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       chunks: ['technologist'],
-    })
+    }),
+    new webpack.DefinePlugin({
+      DEVELOPMENT: JSON.stringify(env === 'dev'),
+      PRODUCTION: JSON.stringify(env === 'prod')
+    }),
+    new VuetifyLoaderPlugin()
   ],
   devtool: env === "dev" ? "source-map" : void 0,
 });

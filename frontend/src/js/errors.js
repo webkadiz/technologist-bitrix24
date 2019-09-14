@@ -34,4 +34,4 @@ class ServerError extends BaseError {
   }
 }
 
-export { LogicError, JsonError, ServerError }
+export { BaseError, LogicError, JsonError, ServerError }
