@@ -48,7 +48,8 @@ module.exports = env => ({
   },
   devServer: {
     overlay: true,
-    port: 4000
+    port: 4000,
+    historyApiFallback: true
   },
   plugins: [
     new VueLoaderPlugin(),
