@@ -10,8 +10,13 @@ class TechnologistController extends Controller
 	private $project_name;
 	private $archive_path;
 
+	function resolveCORS() {
+		header('Access-Control-Allow-Origin: *');
+	}
+
 	function indexAction()
 	{
+		$this->resolveCORS();
 		//$auth_id = Request::get('AUTH_ID');
 		//Session::set('auth_id', $auth_id);
 
@@ -22,6 +27,7 @@ class TechnologistController extends Controller
 
 	function installAction()
 	{
+		$this->resolveCORS();
 
 		$res = rest_req('placement.bind', [
 			'auth' => Session::get('auth_id'),
@@ -38,6 +44,7 @@ class TechnologistController extends Controller
 
 	function projectAction($action = null, $compute = null)
 	{
+		$this->resolveCORS();
 
 		if ($action === 'get' && $compute === null) {
 			$project = new Project();
@@ -103,6 +110,8 @@ class TechnologistController extends Controller
 
 	function apiGetFieldsAction()
 	{
+		$this->resolveCORS();
+
 		$fields = require PL_BASE_DIR . '/data/fields-for-cards.php';
 		
 		$this->sendJSON($fields);
