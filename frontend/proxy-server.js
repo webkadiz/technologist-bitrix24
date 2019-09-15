@@ -9,10 +9,15 @@ app.use(express.urlencoded({ extended: true }))
 
 app.all('*', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
+  console.log(req.method, req.url)
 
   if (/\/technologist\//.test(req.url)) {
     console.log('on php server')
-    axios(`http://technologist-php-lite${req.url}`)
+    axios(`http://technologist-php-lite${req.url}`, {
+      method: req.method,
+      data: req.body,
+      params: req.query
+    })
       .then(({ data }) => {
         res.send(data)
       })
@@ -21,12 +26,12 @@ app.all('*', (req, res) => {
     return
   }
 
-  console.log(req.method, req.url, req.body, req.params, req.query)
+  console.log(`http://localhost:4000${req.url}`)
   axios(`http://localhost:4000${req.url}`)
     .then(({ data }) => {
       res.send(data)
     })
-    .catch(err => console.log('error'))
+    .catch(err => console.log('error on dev server'))
 })
 
 const credential = {

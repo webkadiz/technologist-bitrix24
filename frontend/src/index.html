@@ -10,10 +10,7 @@
 
   <body>
     <div id="app">
-      <header-panel></header-panel>
-      <library :detail-list="$store.state.detailList"></library>
-      <report></report>
-      <errors></errors>
+      <router-view></router-view>
     </div>
 
     <script src="//api.bitrix24.com/api/v1/"></script>

@@ -1,0 +1,186 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+:root {
+  --error: #e74c3c;
+  --success: @extend .teal;
+}
+
+html {
+  font-size: 15px;
+}
+
+html,
+body {
+  height: 100%;
+  background: white;
+}
+
+body {
+  font-size: 1rem;
+}
+
+.file-field .btn,
+.file-field .btn-large,
+.file-field .btn-small {
+  height: 36px;
+  line-height: 36px;
+}
+
+.input-field > label {
+  pointer-events: none;
+}
+
+[flex] {
+  display: flex;
+}
+
+@for $i from 1 through 1000 {
+  .mt-#{$i},
+  [mt-#{$i}] {
+    margin-top: #{$i}px;
+  }
+
+  .mr-#{$i},
+  [mr-#{$i}] {
+    margin-right: #{$i}px;
+  }
+
+  .mb-#{$i},
+  [mb-#{$i}] {
+    margin-bottom: #{$i}px;
+  }
+
+  .ml-#{$i},
+  [ml-#{$i}] {
+    margin-left: #{$i}px;
+  }
+}
+
+@for $i from 1 through 1000 {
+  .pt-#{$i},
+  [pt-#{$i}] {
+    padding-top: #{$i}px;
+  }
+
+  .pr-#{$i},
+  [pr-#{$i}] {
+    padding-right: #{$i}px;
+  }
+
+  .pb-#{$i},
+  [pb-#{$i}] {
+    padding-bottom: #{$i}px;
+  }
+
+  .pl-#{$i},
+  [pl-#{$i}] {
+    padding-left: #{$i}px;
+  }
+}
+
+.border_error {
+  border: 2px solid var(--error) !important;
+}
+
+.gutter-add {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+
+#toast-container {
+  top: auto;
+  bottom: 5px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.toast-success {
+  background: #388e3c;
+}
+
+.toast-error {
+  background: #e53935;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  border-color: #5a427f;
+  background: #5a427f;
+}
+
+.scale-enter-active,
+.scale-leave-active {
+  transition: 0.3s;
+}
+
+.scale-enter,
+.scale-leave-to {
+  transform: scale(0);
+}
+
+.modal {
+  transition: 0.3s;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.active {
+  pointer-events: auto;
+}
+
+.modal .close span {
+  opacity: 1;
+  color: white;
+}
+
+.modal-content {
+  background: #ecf0f1;
+  border: 1px solid var(--success);
+  width: 70%;
+  box-shadow: 0 10px 45px -18px;
+}
+
+.modal-title {
+  color: white;
+}
+
+.custom-file {
+  margin-top: 10px;
+  display: block;
+}
+
+.custom-file-input {
+  position: absolute;
+}
+
+
+.v-badge {
+  line-height: inherit;
+  display: block;
+}
+
+.v-treeview {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.v-treeview-node {
+  cursor: pointer;
+}
+
+.v-treeview-node__root {
+  max-height: 40px;
+}
+
+.v-treeview > .v-treeview-node--leaf {
+  margin-left: 0;
+}
+
+.v-treeview > .v-treeview-node--leaf > .v-treeview-node__root {
+  padding-left: 24px;
+}

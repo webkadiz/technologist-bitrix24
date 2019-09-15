@@ -5,7 +5,7 @@ const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = env => ({
-  entry: { technologist: "./src/js/technologist.js", print: "./src/js/print.js" },
+  entry: { technologist: "./src/entry/technologist.js", print: "./src/entry/print.js" },
   output: {
     path: path.resolve(__dirname, "../web/assets/"),
     filename: "js/[name].js",
@@ -36,14 +36,18 @@ module.exports = env => ({
       {
         test: /\.css$/,
         loader: ["vue-style-loader", "css-loader"]
+      },
+      {
+        test: /\.(ttf|woff|woff2|eot)/,
+        use: 'url-loader'
       }
     ]
   },
   resolve: {
     extensions: [".css", ".scss", ".sass", ".js", ".vue"],
     alias: {
-      '@sass': __dirname + '/src/sass',
-      '@components': __dirname + '/src/js/components'
+      '@': __dirname + '/src',
+      vue: 'vue/dist/vue.esm'
     }
   },
   devServer: {

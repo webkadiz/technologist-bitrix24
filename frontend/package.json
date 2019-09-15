@@ -6,7 +6,8 @@
     "serve": "webpack-dev-server --mode development --env dev",
     "prod-serve": "webpack-dev-server --mode production --env prod",
     "dev": "webpack --mode development --env dev",
-    "prod": "webpack --mode production --env prod"
+    "prod": "webpack --mode production --env prod",
+    "proxy": "node proxy-server.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "materialize-css": "^1.0.0-rc.2",
     "velocity-animate": "^1.5.2",
     "vue": "^2.6.6",
+    "vue-router": "^3.1.3",
     "vuetify": "^2.0.15",
     "vuex": "^3.1.0"
   },
@@ -25,6 +27,7 @@
     "@babel/core": "^7.6.0",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/preset-env": "^7.6.0",
+    "@mdi/font": "^4.4.95",
     "babel-loader": "^8.0.6",
     "css-loader": "^2.1.0",
     "deepmerge": "^4.0.0",
