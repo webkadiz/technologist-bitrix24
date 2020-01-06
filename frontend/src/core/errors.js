@@ -4,7 +4,7 @@ class BaseError extends Error {
     this.store = store
     this.name = this.constructor.name
     this.errors = this.store ? this.store.state.errors : []
-    
+
     let id = _.last(this.errors) && _.last(this.errors).id + 1 || 1
 
     this.errors.push({
@@ -17,8 +17,9 @@ class BaseError extends Error {
 }
 
 class JsonError extends BaseError {
-  constructor(store, message = 'Сервер вернул данные в неправильном формате') {
+  constructor(store, data, message = 'Сервер вернул данные в неправильном формате') {
     super(store, message)
+    console.log(data)
   }
 }
 

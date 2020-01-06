@@ -49,7 +49,7 @@ class Project
 
 		$detail = [];
 		foreach ($temp_detail as $key => $field) {
-			$detail[strtounder($key)] = $field;
+			$detail[Util::strtounder($key)] = $field;
 		}
 
 		$detailID = (string)$detail['id'];
@@ -216,6 +216,7 @@ class Project
 	private function modifyDetail($detail, $type)
 	{
 		$detailFinal = [];
+		$detailID = DB::queryOne("SELECT MAX(detail_id) FROM detail WHERE project_id = {$this->getProjectID()}");
 
 		foreach ($detail as $fieldName => $fieldValue) {
 			if (is_numeric($fieldName)) continue;
@@ -226,7 +227,7 @@ class Project
 			if ($fieldName === 'detail_name' && !$detail['name']) $fieldNameFinal = 'name';
 			if ($fieldName === 'assembly_id') {
 				$fieldNameFinal = 'id';
-				$fieldValue = '10000' . $fieldValue;
+				$fieldValue = $detailID + $fieldValue;
 			}
 			if ($fieldName === 'project_id' || $fieldName === 'link') continue;
 

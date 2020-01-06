@@ -3,7 +3,6 @@
 namespace migrations;
 
 use pl\core\{DB, Config};
-use pl\util\Util;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../vendor/webkadiz/php-lite/framework/bootstrap.php';

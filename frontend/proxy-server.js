@@ -12,7 +12,7 @@ app.all('*', (req, res) => {
   console.log(req.method, req.url)
 
   if (/\/technologist\//.test(req.url)) {
-    console.log('on php server')
+    console.log('on php server', req.body, req.query)
     axios(`http://technologist-php-lite${req.url}`, {
       method: req.method,
       data: req.body,

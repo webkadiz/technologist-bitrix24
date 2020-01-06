@@ -7,7 +7,6 @@ import vuetify from '@/core/vuetify'
 import '@/index.scss'
 
 import Vue from 'vue'
-
 import store from '@/core/store'
 import router from '@/core/router'
 import created from '@/core/created'

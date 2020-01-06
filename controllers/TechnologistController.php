@@ -1,26 +1,23 @@
 <?php
 
-use pl\core\Controller;
+use pl\core\{Config, Controller, Session, Request, Logger, Response};
 use pl\util\Util;
-use app\components\Project;
+use app\components\{Project, RestApi};
 
 class TechnologistController extends Controller
 {
-	private $project_path;
-	private $project_name;
-	private $archive_path;
 
-	function resolveCORS() {
+	function resolveCORS()
+	{
 		header('Access-Control-Allow-Origin: *');
 	}
 
 	function indexAction()
 	{
 		$this->resolveCORS();
-		//$auth_id = Request::get('AUTH_ID');
-		//Session::set('auth_id', $auth_id);
 
-		d($_REQUEST);
+		$auth_id = Request::get('AUTH_ID');
+		Session::set('auth_id', $auth_id);
 
 		$this->renderPartial();
 	}
@@ -29,16 +26,17 @@ class TechnologistController extends Controller
 	{
 		$this->resolveCORS();
 
-		$res = rest_req('placement.bind', [
+		$res = RestApi::makeRequest('placement.bind', [
 			'auth' => Session::get('auth_id'),
 			'PLACEMENT' => 'SONET_GROUP_DETAIL_TAB',
-			'HANDLER' => 'https://' . Request::getServer('server_name') . '/technologist/project/index',
-			'TITLE' => 'ТЕХНОЛОГ_ТЕСТ'
+			'HANDLER' => Request::getServer('request_scheme') . '://' . Request::getServer('server_name') . '/technologist/project/index',
+			'TITLE' => Config::get('app_title')
 		]);
+		
+		Logger::logVarDump($res);
+		Session::unset('auth_id');
 
-		Logger::log($res);
-
-		Response::sendJSON($res);
+		$this->sendJSON($res);
 	}
 
 
@@ -50,7 +48,6 @@ class TechnologistController extends Controller
 			$project = new Project();
 			$library = $project->getLibrary();
 
-			//Util::dump($library);
 			$this->sendJSON($library);
 		} elseif ($action === 'create' && $compute === null) {
 
@@ -113,7 +110,7 @@ class TechnologistController extends Controller
 		$this->resolveCORS();
 
 		$fields = require PL_BASE_DIR . '/data/fields-for-cards.php';
-		
+
 		$this->sendJSON($fields);
 	}
 }

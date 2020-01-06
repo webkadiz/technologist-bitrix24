@@ -30,8 +30,8 @@ export default {
     treeOpen(tree) {
       console.log('open', tree)
     },
-    treeActive(active, e) {
-      console.log('active', active,e )
+    treeActive([active]) {
+      console.log('active', active)
     }
   }
 }

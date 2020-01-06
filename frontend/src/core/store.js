@@ -88,7 +88,7 @@ export default new Vuex.Store({
     getProject(context) {
       return axios("/technologist/project/get")
         .then(({ data }) => {
-          if(typeof data === 'string') throw new JsonError(context)
+          if(typeof data === 'string') throw new JsonError(context, data)
           context.state.detailList = data
         })
         .catch(err => {

@@ -9,7 +9,7 @@ module.exports = env => ({
   output: {
     path: path.resolve(__dirname, "../web/assets/"),
     filename: "js/[name].js",
-    publicPath: "/"
+    publicPath: "/assets/"
   },
   module: {
     rules: [
