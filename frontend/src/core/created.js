@@ -10,6 +10,4 @@ export default async function() {
   this.$store.commit('initFormat')
   await this.$store.dispatch('getFields')
   await this.$store.dispatch('getProject')
-  console.log(this.$store.state.detailList)
-  console.log(this.$route)
 }

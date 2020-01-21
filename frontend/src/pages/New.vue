@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <v-navigation-drawer app permanent>
-      123
       <v-treeview
         @update:active="treeActive"
         @update:open="treeOpen"
@@ -16,7 +15,7 @@
     </v-app-bar>
 
     <v-content>
-      <v-container fluid>sdf</v-container>
+      <v-container fluid></v-container>
     </v-content>
   </v-app>
 </template>

@@ -46,7 +46,7 @@ export default {
 
           formData.append("economist", file);
 
-          fetch("/technologist/project/load-economist", {
+          fetch("/technologist/economist/load-economist", {
             method: "POST",
             body: formData
           })
@@ -81,7 +81,7 @@ export default {
             })
             .catch(err => {
               if(err instanceof BaseError) return
-              new ServerError(context);
+              new ServerError(this.$store);
             })
         } else {
           toastError(
@@ -104,7 +104,7 @@ export default {
           this.getProject()
         }).catch(err => {
           if(err instanceof BaseError) return
-          new ServerError(context);
+          new ServerError(this.$store);
         });
     },
     ...Vuex.mapActions(["getProject"])

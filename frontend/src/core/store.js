@@ -97,7 +97,7 @@ export default new Vuex.Store({
         })
     },
     getFields(context) {
-      return axios("/technologist/api/fields")
+      return axios("/technologist/fields")
         .then(({data}) => {
           if(typeof data === 'string') throw new JsonError(context)
           context.state.fields = data;

@@ -1,7 +1,7 @@
 <template>
   <div>
     
-    <router-link to="/new" class="new-version"><v-btn>new version</v-btn></router-link>
+    <router-link to="/new" class="new-version"><v-btn>Новая версия</v-btn></router-link>
     <header-panel></header-panel>
     <library :detail-list="$store.state.detailList"></library>
     <report></report>

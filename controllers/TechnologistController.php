@@ -1,11 +1,17 @@
 <?php
 
-use pl\core\{Config, Controller, Session, Request, Logger, Response};
+use pl\core\{Config, Controller, Session, Request, Logger, Response, Router};
 use pl\util\Util;
 use app\components\{Project, RestApi};
 
 class TechnologistController extends Controller
 {
+	function __construct() {
+		parent::__construct();
+		
+		if(PL_DEV)
+			$this->resolveCORS();
+	}
 
 	function resolveCORS()
 	{
@@ -14,17 +20,16 @@ class TechnologistController extends Controller
 
 	function indexAction()
 	{
-		$this->resolveCORS();
 
 		$auth_id = Request::get('AUTH_ID');
 		Session::set('auth_id', $auth_id);
 
 		$this->renderPartial();
+
 	}
 
 	function installAction()
 	{
-		$this->resolveCORS();
 
 		$res = RestApi::makeRequest('placement.bind', [
 			'auth' => Session::get('auth_id'),
@@ -37,80 +42,106 @@ class TechnologistController extends Controller
 		Session::unset('auth_id');
 
 		$this->sendJSON($res);
+
 	}
 
 
-	function projectAction($action = null, $compute = null)
-	{
-		$this->resolveCORS();
+	function indexProjectAction() {
 
-		if ($action === 'get' && $compute === null) {
-			$project = new Project();
-			$library = $project->getLibrary();
+		//$place_opt = Request::getJSON('PLACEMENT_OPTIONS');
 
-			$this->sendJSON($library);
-		} elseif ($action === 'create' && $compute === null) {
+		//Session::set('projectID', $place_opt['GROUP_ID']);
+		$this->setViewPath(Router::getController() . '/project');
 
-			$archive = $_FILES['project'];
+		$this->renderPartial(['title' => 'hello wolrd']);
 
-
-			$project = new Project();
-			$project->create($archive);
-
-
-			$this->sendJSON([
-				'result' => 'проект успешно создан'
-			]);
-		} elseif ($action === 'index' && $compute === null) {
-			//$place_opt = Request::getJSON('PLACEMENT_OPTIONS');
-
-			//Session::set('projectID', $place_opt['GROUP_ID']);
-
-			$this->renderPartial(['title' => 'hello wolrd']);
-		} elseif ($action === 'remove' && $compute === null) {
-			$project = new Project();
-			$project->remove();
-
-			$this->sendJSON(['result' => 'проект успешно удален']);
-		} elseif ($action === 'save' && $compute === null) {
-			$project = new Project();
-
-			$detail = Request::getJSON('detail');
-			$project->saveData($detail);
-
-			Response::sendJSON(['result' => 'данные успешно сохранены']);
-		} elseif ($action === 'load-economist' && $compute === null) {
-			$economist = $_FILES['economist'];
-
-			$project = new Project();
-			$project->loadEconomist($economist);
-
-			$this->sendJSON(['result' => 'нормы экономиста успешно загружены']);
-		} elseif ($action === 'compute' && $compute === 'materials') {
-			$project = new Project();
-			$materials = $project->getMaterials();
-
-			$this->sendJSON([
-				'data' => $materials,
-				'result' => 'материалы успешно загружены'
-			]);
-		} elseif ($action === 'compute' && $compute === 'labor-costs') {
-			$project = new Project();
-			$laborCosts = $project->getLaborCosts();
-
-			$this->sendJSON([
-				'data' => $laborCosts,
-				'result' => 'трудозатраты успешно загружены'
-			]);
-		}
 	}
 
-	function apiGetFieldsAction()
+	function createProjectAction() {
+
+		$archive = $_FILES['project'];
+
+
+		$project = new Project();
+		$project->create($archive);
+
+
+		$this->sendJSON([
+			'result' => 'проект успешно создан'
+		]);
+
+	}
+
+	function getProjectAction() {
+
+		$project = new Project();
+		$library = $project->getLibrary();
+
+		$this->sendJSON($library);
+
+	}
+
+	function saveProjectAction() {
+
+		$project = new Project();
+
+		$detail = Request::getJSON('detail');
+		$project->saveData($detail);
+
+		$this->sendJSON(['result' => 'данные успешно сохранены']);
+
+	}
+
+	function removeProjectAction() {
+
+		$project = new Project();
+		$project->remove();
+
+		$this->sendJSON(['result' => 'проект успешно удален']);
+
+	}
+
+	function loadEconomistAction() {
+
+		$economist = $_FILES['economist'];
+
+		$project = new Project();
+		$project->loadEconomist($economist);
+
+		$this->sendJSON(['result' => 'нормы экономиста успешно загружены']);
+
+	}
+
+	function computeMaterialsAction() {
+
+		$project = new Project();
+		$materials = $project->getMaterials();
+
+		$this->sendJSON([
+			'data' => $materials,
+			'result' => 'материалы успешно загружены'
+		]);
+
+	}
+
+	function computeLaborCostsAction() {
+
+		$project = new Project();
+		$laborCosts = $project->getLaborCosts();
+
+		$this->sendJSON([
+			'data' => $laborCosts,
+			'result' => 'трудозатраты успешно загружены'
+		]);
+
+	}
+
+	function getFieldsAction()
 	{
-		$this->resolveCORS();
 
 		$fields = require PL_BASE_DIR . '/data/fields-for-cards.php';
 
 		$this->sendJSON($fields);
+
 	}
 }

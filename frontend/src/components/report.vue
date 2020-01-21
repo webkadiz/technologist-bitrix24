@@ -104,7 +104,7 @@ export default {
       WinPrint.document.close();
     },
     getMaterialList() {
-      return axios("/technologist/project/compute/materials")
+      return axios("/technologist/economist/compute-materials")
         .then(({data}) => {
           if(typeof data === 'string') throw new JsonError(this.$store, 'не удалось получить материалы от сервера')
           if(data.error) throw new LogicError(this.$store, data.error.message)
@@ -119,7 +119,7 @@ export default {
     },
 
     getLaborCosts() {
-      return axios("/technologist/project/compute/labor-costs")
+      return axios("/technologist/economist/compute-labor-costs")
         .then(({ data }) => {
           console.log(data)
           if(typeof data === 'string') throw new JsonError(this.$store, 'не удалось получить трудозатраты от сервера')
