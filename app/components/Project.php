@@ -21,8 +21,7 @@ class Project
 	{
 		$this->projectID = Session::get("projectID");
 
-		//return $this->projectID;
-		return 41;
+		return $this->projectID;
 	}
 
 	private function getProjectPath()
@@ -193,7 +192,6 @@ class Project
 			$assemblyItemFinal['children'][] = $detailItemFinal;
 		}
 
-
 		$hardwareList = DB::query("SELECT name, gost, amount, weight, weight_thousand, note FROM hardware WHERE project_id={$this->getProjectID()}", [], PDO::FETCH_NUM);
 
 		$hardware = [];
@@ -207,7 +205,6 @@ class Project
 			$hardware['children'] = $hardwareList;
 			$library[] = $hardware;
 		}
-
 
 		return $library;
 	}
@@ -236,12 +233,7 @@ class Project
 
 		$detailFinal['type'] = $type;
 
-		if ($type === 'gg') {
-			$detailFinal['component'] = 'asd';
-		} else {
-			$detailFinal['component'] = 'ContentCommon';
-		}
-
+		$detailFinal['component'] = 'ContentCommon';
 
 		return $detailFinal;
 	}
@@ -666,25 +658,17 @@ class Project
 	private function loadProjectData()
 	{
 
-		//try {
 			$detailExcel = new ExcelAdapter($this->getExcelFilename('detail'));
 			$detailSheet = $detailExcel->getSheet();
 			$this->loadProjectTable('detail', $detailSheet);
-		//} catch(\Exception $e) {}
 
-
-		try {
 			$assemblyExcel = new ExcelAdapter($this->getExcelFilename('assembly'));
 			$assemblySheet = $assemblyExcel->getSheet();
 			$this->loadProjectTable('assembly', $assemblySheet);
-		} catch(\Exception $e) {}
 
-
-		try {
 			$hardwareExcel = new ExcelAdapter($this->getExcelFilename('fixing'));
 			$hardwareSheet = $hardwareExcel->getSheet();
 			$this->loadProjectTable('hardware', $hardwareSheet);
-		} catch(\Exception $e) {}
 
 	}
 

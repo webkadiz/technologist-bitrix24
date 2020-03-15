@@ -22,8 +22,6 @@ export default {
 
       let difference = _.differenceBy(nonServedErrors, this.localErrors);
       
-      //console.log(nonServedErrors, 'non served');
-      //console.log(difference, 'difference');
       this.localErrors = this.localErrors.concat(difference);
     }
   },
@@ -31,7 +29,6 @@ export default {
     closed(reason) {
       let error = this.localErrors.shift()
       this.makeErrorIsServed(error.id)
-      console.log(this.localErrors)
     },
     ...mapMutations(['makeErrorIsServed'])
   },

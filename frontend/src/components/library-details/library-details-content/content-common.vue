@@ -30,6 +30,7 @@ import Fields from '../fields'
 import Scheme from '../scheme'
 import axios from 'axios'
 import Vuex from 'vuex'
+import { LogicError, JsonError, ServerError, BaseError } from '@/core/errors'
 
 export default {
   components: {
@@ -63,10 +64,10 @@ export default {
       axios
         .post('/technologist/project/save', form)
         .then(({ data }) => {
-          console.log(data)
           if (typeof data === 'string')
-            throw new JsonError(this.$store, 'не удалось удалить проект')
+            throw new JsonError(this.$store, '', 'не удалось сохранить проект')
           this.getProject()
+          new JsonError(this.$store, '', 'Данные успешно изменены')
         })
         .catch(err => {
           if (err instanceof BaseError) return

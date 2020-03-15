@@ -13,7 +13,7 @@
     <router-view></router-view>
   </div>
   <script src="https://api.bitrix24.com/api/v1/"></script>
-  <script src="/assets/js/technologist.js"></script>
+  <script src="http://localhost:4000/js/technologist.js"></script>
 </body>
 
 </html>

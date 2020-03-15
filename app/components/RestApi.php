@@ -2,7 +2,7 @@
 
 namespace app\components;
 
-use pl\core\{Config, Logger};
+use pl\core\{Config};
 
 class RestApi
 {

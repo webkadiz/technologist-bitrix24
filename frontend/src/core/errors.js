@@ -19,7 +19,6 @@ class BaseError extends Error {
 class JsonError extends BaseError {
   constructor(store, data, message = 'Сервер вернул данные в неправильном формате') {
     super(store, message)
-    console.log(data)
   }
 }
 

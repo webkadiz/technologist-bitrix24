@@ -32,6 +32,7 @@ export default {
       this.width = el.getBoundingClientRect().width;
       this.height = el.getBoundingClientRect().height;
       $(el).before($(el).clone());
+      $(el).prev().find('.btn').hide()
 
       $(el).addClass("scheme__item_open"); // добавляем класс для абсолютного позиционирования
       $(el).css({

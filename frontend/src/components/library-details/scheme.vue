@@ -6,7 +6,6 @@
 
 <script>
 import SchemeItem from "./scheme-item";
-// :data="$store.state.projectDir + '/' + $store.state.projectName + '/' + pdf"
 
 export default {
   components: {
@@ -15,7 +14,8 @@ export default {
   props: ["scheme"],
   computed: {
     isScheme() {
-      return !~this.scheme.indexOf("/0.pdf");
+      console.log(this.scheme)
+      return !~this.scheme.indexOf("/0.pdf") && !~this.scheme.indexOf("/.pdf");
     }
   }
 };

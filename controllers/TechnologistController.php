@@ -30,14 +30,13 @@ class TechnologistController extends Controller
 
 	function installAction()
 	{
-
 		$res = RestApi::makeRequest('placement.bind', [
 			'auth' => Session::get('auth_id'),
 			'PLACEMENT' => 'SONET_GROUP_DETAIL_TAB',
-			'HANDLER' => Request::getServer('request_scheme') . '://' . Request::getServer('server_name') . '/technologist/project/index',
+			'HANDLER' => Request::getServer('request_scheme') . '://' . Request::getServer('server_name') . Config::get('project_handle_url'),
 			'TITLE' => Config::get('app_title')
 		]);
-		
+
 		Logger::logVarDump($res);
 		Session::unset('auth_id');
 
@@ -48,12 +47,12 @@ class TechnologistController extends Controller
 
 	function indexProjectAction() {
 
-		//$place_opt = Request::getJSON('PLACEMENT_OPTIONS');
+		$place_opt = Request::getJSON('PLACEMENT_OPTIONS');
 
-		//Session::set('projectID', $place_opt['GROUP_ID']);
+		Session::set('projectID', $place_opt['GROUP_ID']);
 		$this->setViewPath(Router::getController() . '/project');
 
-		$this->renderPartial(['title' => 'hello wolrd']);
+		$this->renderPartial();
 
 	}
 

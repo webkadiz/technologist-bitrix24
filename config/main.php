@@ -14,6 +14,7 @@ return [
         'technologist/economist/compute-labor-costs' => 'technologist/computeLaborCosts',        
         'technologist/fields' => 'technologist/getFields',
     ],
+    'project_handle_url' => '/technologist/project/index',
     'bitrix_base_url' => 'https://b24-97fswd.bitrix24.ru',
     'app_title' => 'ТЕХНОЛОГ'
 ];
